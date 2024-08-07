@@ -4,8 +4,9 @@ import { AiOutlineSearch } from 'react-icons/ai';
 import { FaMoon, FaSun } from 'react-icons/fa';
 import { useSelector, useDispatch } from 'react-redux';
 import { toggleTheme } from '../redux/theme/themeSlice';
-// import { signoutSuccess } from '../redux/user/userSlice';
-// import { useEffect, useState } from 'react';
+import { signoutSuccess } from '../redux/user/userSlice';
+import { useEffect, useState } from 'react';
+import ZanoahLogo from './ZanoahLogo';
 
 export default function Header() {
   const path = useLocation().pathname;
@@ -14,50 +15,51 @@ export default function Header() {
   const dispatch = useDispatch();
   const { currentUser } = useSelector((state) => state.user);
   const { theme } = useSelector((state) => state.theme);
-  // const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
 
-  // useEffect(() => {
-  //   const urlParams = new URLSearchParams(location.search);
-  //   const searchTermFromUrl = urlParams.get('searchTerm');
-  //   if (searchTermFromUrl) {
-  //     setSearchTerm(searchTermFromUrl);
-  //   }
-  // }, [location.search]);
+  useEffect(() => {
+    const urlParams = new URLSearchParams(location.search);
+    const searchTermFromUrl = urlParams.get('searchTerm');
+    if (searchTermFromUrl) {
+      setSearchTerm(searchTermFromUrl);
+    }
+  }, [location.search]);
 
-  // const handleSignout = async () => {
-  //   try {
-  //     const res = await fetch('/api/user/signout', {
-  //       method: 'POST',
-  //     });
-  //     const data = await res.json();
-  //     if (!res.ok) {
-  //       console.log(data.message);
-  //     } else {
-  //       dispatch(signoutSuccess());
-  //     }
-  //   } catch (error) {
-  //     console.log(error.message);
-  //   }
-  // };
+  const handleSignout = async () => {
+    try {
+      const res = await fetch('/api/user/signout', {
+        method: 'POST',
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        console.log(data.message);
+      } else {
+        dispatch(signoutSuccess());
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const urlParams = new URLSearchParams(location.search);
-    // urlParams.set('searchTerm', searchTerm);
+    urlParams.set('searchTerm', searchTerm);
     const searchQuery = urlParams.toString();
     navigate(`/search?${searchQuery}`);
   };
 
   return (
-    <Navbar className='border-b-2'>
+    <Navbar className='border-b-2 bg-stone-100'>
       <Link
         to='/'
         className='self-center whitespace-nowrap text-sm sm:text-xl font-semibold dark:text-white'
       >
-        <span className='px-2 py-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-lg text-white'>
-          Zanoahs
+        {/* <span className='px-2 py-1 bg-gradient-to-r from-blue-500 via-white-300 to-white rounded-lg text-white'>
+          Zanoah
         </span>
-        Blog
+        Blog */}
+        <ZanoahLogo />
       </Link>
       <form onSubmit={handleSubmit}>
         <TextInput
@@ -65,8 +67,8 @@ export default function Header() {
           placeholder='Search...'
           rightIcon={AiOutlineSearch}
           className='hidden lg:inline'
-          // value={searchTerm}
-          // onChange={(e) => setSearchTerm(e.target.value)}
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
         />
       </form>
       <Button className='w-12 h-10 lg:hidden' color='gray' pill>
@@ -99,13 +101,13 @@ export default function Header() {
               <Dropdown.Item>Profile</Dropdown.Item>
             </Link>
             <Dropdown.Divider />
-            <Link to='/dashboard?tab=comments'>
-            <Dropdown.Item>Sign out</Dropdown.Item>
-            </Link>
+            <Link to='/'>
+            <Dropdown.Item onClick={handleSignout}>Sign out</Dropdown.Item>
+          </Link> 
           </Dropdown>
         ) : (
           <Link to='/sign-in'>
-            <Button gradientDuoTone='purpleToBlue' outline>
+            <Button gradientDuoTone='blueToRed' outline>
               Sign In
             </Button>
           </Link>
@@ -116,18 +118,12 @@ export default function Header() {
         <Navbar.Link active={path === '/'} as={'div'}>
           <Link to='/'>Home</Link>
         </Navbar.Link>
-        <Navbar.Link active={path === '/Gaming'} as={'div'}>
-          <Link to='/Gaming'>Gaming</Link>
+        <Navbar.Link active={path === '/about'} as={'div'}>
+          <Link to='/about'>About</Link>
         </Navbar.Link>
-        <Navbar.Link active={path === '/Tech'} as={'div'}>
-          <Link to='/Tech'>Tech</Link>
-        </Navbar.Link>
-        <Navbar.Link active={path === '/Comics'} as={'div'}>
-          <Link to='/Comics'>Comics</Link>
-        </Navbar.Link>
-        {/* <Navbar.Link active={path === '/projects'} as={'div'}>
+        <Navbar.Link active={path === '/projects'} as={'div'}>
           <Link to='/projects'>Projects</Link>
-        </Navbar.Link> */}
+        </Navbar.Link>
       </Navbar.Collapse>
     </Navbar>
   );

@@ -99,6 +99,8 @@ export default function DashSidebar() {
               </Link>
             </>
           )}
+            <span>Dont have an account?</span>
+          <Link to='/'>
           <Sidebar.Item
             icon={HiArrowSmRight}
             className='cursor-pointer'
@@ -106,6 +108,7 @@ export default function DashSidebar() {
           >
             Sign Out
           </Sidebar.Item>
+          </Link>
         </Sidebar.ItemGroup>
       </Sidebar.Items>
     </Sidebar>
